@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/bool64/brick"
-	"github.com/bool64/brick-starter-kit/internal/infra"
-	"github.com/bool64/brick-starter-kit/internal/infra/nethttp"
-	"github.com/bool64/brick-starter-kit/internal/infra/service"
+	"github.com/vearutop/form2mail/internal/infra"
+	"github.com/vearutop/form2mail/internal/infra/nethttp"
+	"github.com/vearutop/form2mail/internal/infra/service"
 )
 
 func main() {

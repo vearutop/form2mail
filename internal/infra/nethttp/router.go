@@ -5,19 +5,20 @@ import (
 	"net/http"
 
 	"github.com/bool64/brick"
-	"github.com/bool64/brick-starter-kit/internal/infra/nethttp/ui"
-	"github.com/bool64/brick-starter-kit/internal/infra/service"
-	"github.com/bool64/brick-starter-kit/internal/usecase"
 	"github.com/swaggest/rest/nethttp"
+	"github.com/vearutop/form2mail/internal/infra/nethttp/ui"
+	"github.com/vearutop/form2mail/internal/infra/service"
+	"github.com/vearutop/form2mail/internal/usecase"
 )
 
 // NewRouter creates an instance of router filled with handlers and docs.
 func NewRouter(deps *service.Locator) http.Handler {
 	r := brick.NewBaseRouter(deps.BaseLocator)
 
-	r.Method(http.MethodGet, "/hello", nethttp.NewHandler(usecase.HelloWorld(deps)))
+	r.Method(http.MethodPost, "/receive", nethttp.NewHandler(usecase.Receive(deps),
+		nethttp.SuccessStatus(http.StatusSeeOther)))
 
-	r.Method(http.MethodGet, "/", ui.Index())
+	r.Method(http.MethodGet, "/", ui.Index(deps.Config))
 	r.Mount("/static/", http.StripPrefix("/static", ui.Static))
 
 	return r

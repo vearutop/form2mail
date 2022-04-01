@@ -1,17 +1,49 @@
-# brick-starter-kit
+# form2mail
 
-[![Build Status](https://github.com/bool64/brick-starter-kit/workflows/test-unit/badge.svg)](https://github.com/bool64/brick-starter-kit/actions?query=branch%3Amaster+workflow%3Atest-unit)
-[![Coverage Status](https://codecov.io/gh/bool64/brick-starter-kit/branch/master/graph/badge.svg)](https://codecov.io/gh/bool64/brick-starter-kit)
-[![GoDevDoc](https://img.shields.io/badge/dev-doc-00ADD8?logo=go)](https://pkg.go.dev/github.com/bool64/brick-starter-kit)
-[![Time Tracker](https://wakatime.com/badge/github/bool64/brick-starter-kit.svg)](https://wakatime.com/badge/github/bool64/brick-starter-kit)
-![Code lines](https://sloc.xyz/github/bool64/brick-starter-kit/?category=code)
-![Comments](https://sloc.xyz/github/bool64/brick-starter-kit/?category=comments)
+[![Build Status](https://github.com/vearutop/form2mail/workflows/test-unit/badge.svg)](https://github.com/vearutop/form2mail/actions?query=branch%3Amaster+workflow%3Atest-unit)
+[![Coverage Status](https://codecov.io/gh/vearutop/form2mail/branch/master/graph/badge.svg)](https://codecov.io/gh/vearutop/form2mail)
+[![GoDevDoc](https://img.shields.io/badge/dev-doc-00ADD8?logo=go)](https://pkg.go.dev/github.com/vearutop/form2mail)
+[![Time Tracker](https://wakatime.com/badge/github/vearutop/form2mail.svg)](https://wakatime.com/badge/github/vearutop/form2mail)
+![Code lines](https://sloc.xyz/github/vearutop/form2mail/?category=code)
+![Comments](https://sloc.xyz/github/vearutop/form2mail/?category=comments)
 
-<!--- TODO Update README.md -->
-
-Project template with GitHub actions for Go.
+This microservice sends emails from a form.
 
 ## Usage
 
-Create a new repository from this template, check out it and run `./run_me.sh` to replace template name with name of
-your repository.
+Create configuration file in `.env` or set environment variables.
+
+```
+LOG_LEVEL=warn
+HTTP_LISTEN_ADDR=127.0.0.1:8008
+
+# Create recaptcha secret keys at https://www.google.com/recaptcha/admin/create.
+# Optional, if RECAPTCHA_SECRET_KEY is empty, recaptcha will be disabled.
+RECAPTCHA_SECRET_KEY=6Lddl<redacted>
+RECAPTCHA_SITE_KEY=6Lddlic<redacted>
+RECAPTCHA_V3=true
+
+# SMTP server configuration
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_FROM=myservice@gmail.com
+SMTP_PASSWORD=monkey
+SMTP_TO=customers@myservice.com
+
+# Optional customizations.
+SMTP_SUBJECT=New form received from {{.name}}
+SMTP_REPLY_TO=email
+SMTP_BODY_HTML_TEMPLATE_FILE=email.template.html
+```
+
+Start the service:
+
+```
+form2mail
+{"level":"info","@timestamp":"2022-04-02T01:11:45.554+0200","message":"starting server, Swagger UI at http://127.0.0.1:8008/docs"}
+```
+
+Service will serve `POST` `/receive` endpoint and will send an email with POST form parameters (including file
+uploads) and URL query parameters.
+
+Optional `success_url` and `fail_url` query/form parameters can be provided to redirect the user.

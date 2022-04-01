@@ -2,21 +2,21 @@ package infra
 
 import (
 	"context"
+	"github.com/vearutop/form2mail/internal/infra/email"
+	"github.com/vearutop/form2mail/internal/infra/recaptcha"
+	"go.opencensus.io/plugin/ochttp"
+	"net/http"
 
 	"github.com/bool64/brick"
-	"github.com/bool64/brick-starter-kit/internal/domain/greeting"
-	"github.com/bool64/brick-starter-kit/internal/infra/schema"
-	"github.com/bool64/brick-starter-kit/internal/infra/service"
-	"github.com/bool64/brick-starter-kit/internal/infra/storage"
-	"github.com/bool64/brick/database"
-	"github.com/bool64/brick/jaeger"
-	"github.com/go-sql-driver/mysql"
 	"github.com/swaggest/rest/response/gzip"
+	"github.com/vearutop/form2mail/internal/infra/schema"
+	"github.com/vearutop/form2mail/internal/infra/service"
 )
 
 // NewServiceLocator creates application service locator.
 func NewServiceLocator(cfg service.Config) (loc *service.Locator, err error) {
 	l := &service.Locator{}
+	l.Config = cfg
 
 	defer func() {
 		if err != nil && l != nil && l.LoggerProvider != nil {
@@ -29,41 +29,24 @@ func NewServiceLocator(cfg service.Config) (loc *service.Locator, err error) {
 		return nil, err
 	}
 
-	if err = jaeger.Setup(cfg.Jaeger, l.BaseLocator); err != nil {
-		return nil, err
-	}
-
 	schema.SetupOpenapiCollector(l.OpenAPI)
 
 	l.HTTPServerMiddlewares = append(l.HTTPServerMiddlewares, gzip.Middleware)
 
-	if err = setupStorage(l, cfg.Database); err != nil {
+	l.RecaptchaCheckerProvider = &recaptcha.V2V3Checker{
+		Config: cfg.Recaptcha,
+		Transport: &ochttp.Transport{
+			Base: http.DefaultTransport,
+			FormatSpanName: func(request *http.Request) string {
+				return "recaptcha"
+			},
+		},
+	}
+
+	l.EmailSenderProvider, err = email.NewSMTPSender(cfg.SMTP)
+	if err != nil {
 		return nil, err
 	}
 
-	l.GreetingMakerProvider = &storage.GreetingSaver{
-		Upstream: &greeting.SimpleMaker{},
-		Storage:  l.Storage,
-	}
-
 	return l, nil
-}
-
-func setupStorage(l *service.Locator, cfg database.Config) error {
-	c, err := mysql.ParseDSN(cfg.DSN)
-	if err != nil {
-		return err
-	}
-
-	conn, err := mysql.NewConnector(c)
-	if err != nil {
-		return err
-	}
-
-	l.Storage, err = database.SetupStorage(cfg, l.CtxdLogger(), "mysql", conn, storage.Migrations)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

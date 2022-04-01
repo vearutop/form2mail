@@ -1,10 +1,14 @@
 package service
 
 import (
-	"github.com/bool64/brick-starter-kit/internal/domain/greeting"
+	"github.com/vearutop/form2mail/internal/infra/email"
+	"github.com/vearutop/form2mail/internal/infra/recaptcha"
 )
 
-// GreetingMakerProvider is a service provider.
-type GreetingMakerProvider interface {
-	GreetingMaker() greeting.Maker
+type RecaptchaCheckerProvider interface {
+	RecaptchaChecker() recaptcha.Checker
+}
+
+type EmailSenderProvider interface {
+	EmailSender() email.Sender
 }
