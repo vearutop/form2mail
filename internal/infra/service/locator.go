@@ -8,5 +8,13 @@ import (
 type Locator struct {
 	*brick.BaseLocator
 
-	GreetingMakerProvider
+	Config Config
+
+	RecaptchaCheckerProvider
+	EmailSenderProvider
+}
+
+// ServiceConfig returns service configuration.
+func (l *Locator) ServiceConfig() Config {
+	return l.Config
 }

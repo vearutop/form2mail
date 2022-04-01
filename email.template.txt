@@ -1,0 +1,7 @@
+Hi there,
+
+{{.name}} sent you a message of type {{.type}}.
+
+{{.message}}
+
+Best regards, yours truly, 🤖.

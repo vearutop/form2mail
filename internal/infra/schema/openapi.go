@@ -6,5 +6,5 @@ import (
 
 // SetupOpenapiCollector configures OpenAPI schema.
 func SetupOpenapiCollector(c *openapi.Collector) {
-	c.Reflector().SpecEns().Info.Title = "brick-starter-kit"
+	c.Reflector().SpecEns().Info.Title = "form2mail"
 }

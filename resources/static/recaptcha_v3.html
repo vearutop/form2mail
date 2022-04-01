@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Contact Demo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/static/pure.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <script>
+        function onSubmit(token) {
+            document.getElementById("g-recaptcha-response").value = token;
+            document.getElementById("contact-form").submit();
+        }
+    </script>
+</head>
+<body>
+
+<div style="margin:2em">
+    <h1>Contact</h1>
+    <!-- recaptcha v3 -->
+
+    <form id="contact-form" action="/receive" method="POST" enctype="multipart/form-data" class="pure-form pure-form-stacked">
+        <fieldset>
+            <legend>A minimalistic contact form</legend>
+            <input class="pure-input-1-4" name="name" placeholder="Name"/>
+            <input class="pure-input-1-4" name="email" placeholder="Email"/>
+
+            <select class="pure-input-1-4" name="type">
+                <option>foo</option>
+                <option>bar</option>
+                <option>baz</option>
+            </select>
+
+            <textarea class="pure-input-1-4" name="message" placeholder="Message"></textarea>
+
+            <input class="pure-input-1-4" type="file" name="file" accept="image/*"/>
+            <input class="pure-input-1-4" type="file" name="file2" />
+
+            <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
+
+            <button type="submit" class="pure-button pure-button-primary g-recaptcha"
+                    data-sitekey="RECAPTCHA_SITE_KEY"
+                    data-callback='onSubmit'
+                    data-action='submit'>Send</button>
+        </fieldset>
+    </form>
+</div>
+
+</body>
+</html>

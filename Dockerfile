@@ -1,7 +1,7 @@
 FROM alpine
 
-COPY ./bin/brick-starter-kit /bin/brick-starter-kit
+COPY ./bin/form2mail /bin/form2mail
 
 EXPOSE 80
 
-ENTRYPOINT [ "/bin/brick-starter-kit" ]
+ENTRYPOINT [ "/bin/form2mail" ]

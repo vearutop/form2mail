@@ -6,3 +6,4 @@
 /bin
 /*.tar.gz
 /*.zip
+/.env
