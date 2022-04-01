@@ -27,7 +27,7 @@ type Form struct {
 	Values             []string                `formData:"values"`
 	Files              []*multipart.FileHeader `formData:"files"`
 
-	values map[string]string `formData:"*"`
+	values map[string]string
 	files  map[string]*multipart.FileHeader
 	r      *http.Request
 }
