@@ -4,6 +4,7 @@ package ui
 import (
 	"bytes"
 	"github.com/vearutop/form2mail/internal/infra/service"
+	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -13,21 +14,26 @@ import (
 )
 
 // Static serves static assets.
-var Static http.Handler
+func Static(cfg service.Config) http.Handler {
+	if cfg.StaticDir != "" {
+		return http.FileServer(http.Dir(cfg.StaticDir))
+	}
 
-// nolint:gochecknoinits
-func init() {
 	if _, err := os.Stat("./resources/static"); err == nil {
 		// path/to/whatever exists
-		Static = http.FileServer(http.Dir("./resources/static"))
-	} else {
-		Static = statigz.FileServer(static.Assets, brotli.AddEncoding, statigz.EncodeOnInit)
+		return http.FileServer(http.Dir("./resources/static"))
 	}
+
+	return statigz.FileServer(static.Assets, brotli.AddEncoding, statigz.EncodeOnInit)
 }
 
 // Index serves index page of the application.
 func Index(cfg service.Config) http.Handler {
-	var file string
+	var (
+		file  string
+		index []byte
+		err   error
+	)
 
 	switch {
 	case cfg.Recaptcha.V3 && cfg.Recaptcha.SiteKey != "":
@@ -38,11 +44,12 @@ func Index(cfg service.Config) http.Handler {
 		file = "no_recaptcha.html"
 	}
 
-	if cfg.Recaptcha.V3 {
-		file = "recaptcha_v3.html"
-	}
+	if cfg.StaticDir != "" {
+		index, err = ioutil.ReadFile(cfg.StaticDir + "/index.html")
 
-	index, err := static.Assets.ReadFile(file)
+	} else {
+		index, err = static.Assets.ReadFile(file)
+	}
 	if err != nil {
 		panic(err)
 	}

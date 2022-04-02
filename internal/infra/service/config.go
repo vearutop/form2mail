@@ -15,4 +15,5 @@ type Config struct {
 
 	SMTP      email.SMTPConfig
 	Recaptcha recaptcha.Config
+	StaticDir string `split_words:"true"`
 }

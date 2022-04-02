@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Contact Demo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/static/pure.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <script>
+        function onSubmit(token) {
+            document.getElementById("g-recaptcha-response").value = token;
+            document.getElementById("contact-form").submit();
+        }
+    </script>
+</head>
+<body>
+
+<div style="margin:2em">
+    <h1>Contact Us</h1>
+    <!-- recaptcha v3 -->
+
+    Thank you, your message has been sent.
+</div>
+
+</body>
+</html>

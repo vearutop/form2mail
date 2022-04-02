@@ -31,9 +31,15 @@ SMTP_PASSWORD=monkey
 SMTP_TO=customers@myservice.com
 
 # Optional customizations.
+## Subject may be a template, containing placeholders for form fields.
 SMTP_SUBJECT=New form received from {{.name}}
+## Reply to is the name of the form field that contains the email address.
 SMTP_REPLY_TO=email
+## Body template files, should contain placeholders for form fields.
 SMTP_BODY_HTML_TEMPLATE_FILE=email.template.html
+SMTP_BODY_TEMPLATE_FILE=email.template.txt
+## Optional path to your langing page contents, `index.html` will be served at /, other resources at /static/*. 
+STATIC_DIR=./testpage
 ```
 
 Start the service:

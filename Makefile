@@ -27,8 +27,6 @@ ifeq ($(DEVGO_PATH),)
 	endif
 endif
 
-RELEASE_TARGETS ?= linux/amd64
-
 -include $(DEVGO_PATH)/makefiles/main.mk
 -include $(DEVGO_PATH)/makefiles/lint.mk
 -include $(DEVGO_PATH)/makefiles/build.mk
@@ -42,8 +40,3 @@ RELEASE_TARGETS ?= linux/amd64
 
 ## Run tests
 test: test-unit test-integration
-
-## Generate local API JS client
-js-client:
-	@go run . -openapi > ./resources/static/openapi.json
-	@docker run --rm -v "$(PWD)":/code swaggest/swac swac js-client ./resources/static/openapi.json --out ./resources/static/ --client-name Backend
