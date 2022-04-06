@@ -2,8 +2,6 @@ package usecase
 
 import (
 	"context"
-	"github.com/vearutop/form2mail/internal/infra/email"
-	"github.com/vearutop/form2mail/internal/infra/recaptcha"
 	"mime/multipart"
 	"net/http"
 
@@ -11,6 +9,8 @@ import (
 	"github.com/bool64/stats"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	"github.com/vearutop/form2mail/internal/infra/email"
+	"github.com/vearutop/form2mail/internal/infra/recaptcha"
 )
 
 type receiveDeps interface {
@@ -33,8 +33,18 @@ type Form struct {
 }
 
 func (f *Form) LoadFromHTTPRequest(r *http.Request) error {
-	if err := r.ParseMultipartForm(30e6); err != nil {
-		return err
+	isMultipart := r.Header.Get("Content-Type") == "multipart/form-data"
+
+	if isMultipart {
+		if err := r.ParseMultipartForm(30e6); err != nil {
+			return err
+		}
+
+		for k, v := range r.MultipartForm.File {
+			f.files[k] = v[0]
+		}
+	} else {
+		r.ParseForm()
 	}
 
 	f.values = make(map[string]string, len(r.Form))
@@ -52,10 +62,6 @@ func (f *Form) LoadFromHTTPRequest(r *http.Request) error {
 
 	f.FailURL = f.values["fail_url"]
 	delete(f.values, "fail_url")
-
-	for k, v := range r.MultipartForm.File {
-		f.files[k] = v[0]
-	}
 
 	f.r = r
 
@@ -78,6 +84,7 @@ func Receive(deps receiveDeps) usecase.Interactor {
 				if in.FailURL != "" {
 					http.Redirect(w, in.r, in.FailURL, http.StatusSeeOther)
 				} else {
+					w.WriteHeader(http.StatusInternalServerError)
 					_, _ = w.Write([]byte("ERROR: " + err.Error()))
 				}
 			}

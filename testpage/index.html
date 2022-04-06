@@ -4,8 +4,8 @@
     <title>Contact Demo</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
-    <link rel="stylesheet" href="/static/pure.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="pure.css">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <script>
@@ -18,15 +18,15 @@
 <body>
 
 <div style="margin:2em">
-    <h1>Contact Us</h1>
+    <h1>Contact Us Foo</h1>
     <!-- recaptcha v3 -->
 
     <form id="contact-form" action="/receive" method="POST" enctype="multipart/form-data"
           class="pure-form pure-form-stacked">
         <fieldset>
             <legend>A minimalistic contact form</legend>
-            <input type="hidden" name="success_url" value="static/success.html"/>
-            <input type="hidden" name="fail_url" value="static/failed.html"/>
+            <input type="hidden" name="success_url" value="success.html"/>
+            <input type="hidden" name="fail_url" value="failed.html"/>
 
             <input class="pure-input-1-4" name="name" placeholder="Name"/>
             <input class="pure-input-1-4" name="email" placeholder="Email"/>

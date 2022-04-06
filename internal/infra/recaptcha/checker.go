@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/bool64/stats"
 	"net/http"
 	"time"
+
+	"github.com/bool64/stats"
 )
 
 type siteVerifyResponse struct {

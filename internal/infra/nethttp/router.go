@@ -18,8 +18,8 @@ func NewRouter(deps *service.Locator) http.Handler {
 	r.Method(http.MethodPost, "/receive", nethttp.NewHandler(usecase.Receive(deps),
 		nethttp.SuccessStatus(http.StatusSeeOther)))
 
+	r.Mount("/", ui.Static(deps.Config))
 	r.Method(http.MethodGet, "/", ui.Index(deps.Config))
-	r.Mount("/static/", http.StripPrefix("/static", ui.Static(deps.Config)))
 
 	return r
 }

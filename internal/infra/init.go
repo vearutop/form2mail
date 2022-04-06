@@ -2,15 +2,15 @@ package infra
 
 import (
 	"context"
-	"github.com/vearutop/form2mail/internal/infra/email"
-	"github.com/vearutop/form2mail/internal/infra/recaptcha"
-	"go.opencensus.io/plugin/ochttp"
 	"net/http"
 
 	"github.com/bool64/brick"
 	"github.com/swaggest/rest/response/gzip"
+	"github.com/vearutop/form2mail/internal/infra/email"
+	"github.com/vearutop/form2mail/internal/infra/recaptcha"
 	"github.com/vearutop/form2mail/internal/infra/schema"
 	"github.com/vearutop/form2mail/internal/infra/service"
+	"go.opencensus.io/plugin/ochttp"
 )
 
 // NewServiceLocator creates application service locator.

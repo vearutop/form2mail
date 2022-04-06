@@ -3,12 +3,13 @@ package ui
 
 import (
 	"bytes"
-	"github.com/vearutop/form2mail/internal/infra/service"
+	"io/fs"
 	"io/ioutil"
 	"net/http"
 	"os"
 
-	"github.com/vearutop/form2mail/resources/static"
+	"github.com/vearutop/form2mail/internal/infra/service"
+	"github.com/vearutop/form2mail/resources"
 	"github.com/vearutop/statigz"
 	"github.com/vearutop/statigz/brotli"
 )
@@ -24,7 +25,12 @@ func Static(cfg service.Config) http.Handler {
 		return http.FileServer(http.Dir("./resources/static"))
 	}
 
-	return statigz.FileServer(static.Assets, brotli.AddEncoding, statigz.EncodeOnInit)
+	sub, err := fs.Sub(resources.Static, "static")
+	if err != nil {
+		panic(err)
+	}
+
+	return statigz.FileServer(sub.(fs.ReadDirFS), brotli.AddEncoding, statigz.EncodeOnInit)
 }
 
 // Index serves index page of the application.
@@ -46,15 +52,14 @@ func Index(cfg service.Config) http.Handler {
 
 	if cfg.StaticDir != "" {
 		index, err = ioutil.ReadFile(cfg.StaticDir + "/index.html")
-
 	} else {
-		index, err = static.Assets.ReadFile(file)
+		index, err = resources.Static.ReadFile("static/" + file)
 	}
 	if err != nil {
 		panic(err)
 	}
 
-	index = bytes.Replace(index, []byte("RECAPTCHA_SITE_KEY"), []byte(cfg.Recaptcha.SiteKey), 1)
+	index = bytes.ReplaceAll(index, []byte("RECAPTCHA_SITE_KEY"), []byte(cfg.Recaptcha.SiteKey))
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write(index)

@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/jordan-wright/email"
 	htemplate "html/template"
 	"mime/multipart"
 	"net/smtp"
 	"sort"
 	"strings"
 	"text/template"
+
+	"github.com/jordan-wright/email"
 )
 
 type Sender interface {
